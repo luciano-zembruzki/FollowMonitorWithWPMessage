@@ -5,13 +5,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from time import sleep
 import random
-import os
-import wget
 from gtts import gTTS
-from io import BytesIO
 from playsound import playsound
-from pydub import AudioSegment
-from pydub.playback import play
 from pywhatkit import pywhatkit
 
 
@@ -47,9 +42,7 @@ phrases = [
 
 def text_to_speech(text):
     print("Enviando mensagem....")
-    mp3_fp = BytesIO()
-    Message = text
-    speech = gTTS(text = Message, lang='pt')
+    speech = gTTS(text, lang='pt')
     speech.save('mp3_fp.mp3')
     playsound('mp3_fp.mp3')
 
@@ -79,10 +72,12 @@ last_followers_count = 0
 while stop == 0:
     browser.get('https://www.instagram.com/python_simplificado/')
     followers_element = WebDriverWait(browser, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="react-root"]/section/main/div/header/section/ul/li[2]/a/span')))
+    
     if last_followers_count > 0:
         print("Você tinha {} seguidores".format(followers_count))
     followers_count = int(followers_element.text)
     print("Você tem agora {} seguidores".format(followers_count))
+    
     if (followers_count > last_followers_count) and (last_followers_count > 0) :
         text_to_speech("Novo seguidor! Vou enviar mensagem para Gabriela")
         pywhatkit.sendwhatmsg_instantly("+5511111111111", str(random.choice(phrases)), 30, False)
